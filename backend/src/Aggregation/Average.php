@@ -8,12 +8,12 @@ use function Functional\every;
 use function Functional\map;
 
 /**
- * Pour une question number,
+ * Pour une question numeric,
  * Retourner la moyenne des réponses
  */
 class Average implements \IWD\JOBINTERVIEW\Aggregation\AggregationInterface
 {
-    const SUPPORTED_TYPE = "number";
+    const SUPPORTED_TYPE = "numeric";
 
     /**
      * @see \IWD\JOBINTERVIEW\Aggregation\AggregationInterface
@@ -24,7 +24,7 @@ class Average implements \IWD\JOBINTERVIEW\Aggregation\AggregationInterface
     }
 
     /**
-     * On ne peut aggréger que des réponses à des questions number
+     * On ne peut aggréger que des réponses à des questions numeric
      *
      * @param array $resultSet
      * @return boolean

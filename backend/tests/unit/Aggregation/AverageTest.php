@@ -11,18 +11,18 @@ final class AverageTest extends TestCase
     {
         $validInput = [
             [
-                "type" => "number",
+                "type" => "numeric",
                 "answer" => 0
             ],
             [
-                "type" => "number",
+                "type" => "numeric",
                 "answer" => 10
             ]
         ];
         $this->assertTrue(Average::supports($validInput));
         $invalidInput = [
             [
-                "type" => "number",
+                "type" => "numeric",
                 "options" => ["A", "B", "C"],
                 "answer" => 1
             ],
@@ -38,11 +38,11 @@ final class AverageTest extends TestCase
     {
         $validInput = [
             [
-                "type" => "number",
+                "type" => "numeric",
                 "answer" => 10
             ],
             [
-                "type" => "number",
+                "type" => "numeric",
                 "answer" => 20
             ]
         ];

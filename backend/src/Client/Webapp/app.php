@@ -27,7 +27,12 @@ $app->after(function (Request $request, Response $response) {
  */
 $app->get('/', function () use ($app, $repo) {
     return [
-        "codes" => $repo->getAllSurveyCodes()
+        "codes" => map($repo->getAllSurveyCodes(), function(string $code) {
+            return [
+                "code" => $code,
+                "questionsURI" => implode("/", ["", $code, "questions"])
+            ];
+        })
     ];
 });
 
@@ -45,9 +50,12 @@ $app->get('/{surveyCode}/questions', function ($surveyCode) use ($app, $repo) {
         $label = $result["label"];
         $type = $result["type"];
         if (!isset($questions[$label])) {
+            /**
+             * Retourner une URI pour récupérer les aggrégations de chaque question
+             */
             $questions[$label] = [
                 "type" => $type,
-                "urlEncoded" => urlencode($label)
+                "aggregationsURI" => implode("/", ["", $surveyCode, "question", urlencode($label), "aggregations"])
             ];
         }
     }
@@ -58,22 +66,34 @@ $app->get('/{surveyCode}/questions', function ($surveyCode) use ($app, $repo) {
 });
 
 /**
- * Retourner les aggrégations disponibles
+ * Retourner les aggrégations disponibles pour une question
  */
 $app->get('/{surveyCode}/question/{questionLabel}/aggregations', function ($surveyCode, $questionLabel) use ($app, $repo, $aggregationManager) {
     $questionLabel = urldecode($questionLabel);
     $results = $repo->filter(function(array $element) use($surveyCode, $questionLabel): bool {
         return $element["survey"]["code"] === $surveyCode && $element["label"] === $questionLabel;
     });
+    $aggregations = [];
+    if (count($results) > 0) {
+        /**
+         * Retourner les uri pour chaque aggrégation
+         */
+        $aggregations = map(
+            $aggregationManager->getAvailableAggregations($results),
+            function(string $aggregationType) use($surveyCode, $questionLabel): string {
+                return implode("/", ["", $surveyCode, "question", urlencode($questionLabel), "aggregation", $aggregationType]);
+            }
+        );
+    }
     return [
         "surveyCode" => $surveyCode,
         "question" => $questionLabel,
-        "aggregations" => count($results) > 0 ? $aggregationManager->getAvailableAggregations($results) : []
+        "aggregations" => $aggregations
     ];
 });
 
 /**
- * Retourner le résultat de l'aggrégation
+ * Retourner le résultat de l'aggrégation demandée sur une question
  */
 $app->get('/{surveyCode}/question/{questionLabel}/aggregation/{aggregationType}', function ($surveyCode, $questionLabel, $aggregationType) use ($app, $repo, $aggregationManager) {
     $questionLabel = urldecode($questionLabel);
