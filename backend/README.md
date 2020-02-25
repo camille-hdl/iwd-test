@@ -10,11 +10,12 @@ To avoid losing time, we have setup a Silex boilerplate to handle HTTP request/r
 > can be maintained over time.
 
 ```bash
-cd fullstack/senior/backend
+cd backend
 composer install
+vendor/bin/phpunit tests/unit/
+
 php -S localhost:8080 -t web web/index.php
 
-#Go to http://localhost:8080, you will see "Status OK"
 ```
 
 ## Guidelines
