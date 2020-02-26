@@ -12,6 +12,7 @@ yarn-error.log*
 
 # testing
 /coverage
+/cypress/screenshots
 
 # production
 /build

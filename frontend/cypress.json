@@ -1,0 +1,6 @@
+{
+    "video": false,
+    "chromeWebSecurity": false,
+    "baseUrl": "http://localhost:3000/",
+    "apiUrl": "http://localhost:8080/"
+}
